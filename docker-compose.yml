@@ -1,0 +1,27 @@
+name: transcript-app
+
+services:
+  backend:
+    build: ./backend
+    container_name: transcript-api
+    ports:
+      - "8000:8000"
+    networks:
+      - app-network
+
+  frontend:
+    build: ./frontend
+    container_name: transcript-ui
+    ports:
+      - "8501:8501"
+    environment:
+      # Le frontend appelle le backend via son nom de service Docker "backend"
+      - BACKEND_URL=http://backend:8000
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
